@@ -67,7 +67,9 @@
     }
 
     .question {
-      margin-bottom: 15px;
+      margin-bottom: 30px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
     }
   </style>
 </head>
@@ -76,8 +78,8 @@
   <div id="instructions">
     <p>Please read the instructions carefully before starting the survey:</p>
     <ul>
-      <li>Answer all questions honestly.</li>
-      <li>For each question, select "Yes" or "No".</li>
+      <li>For each of the following scenarios, pretend a friend is asking you for advice and choose the answer you would be most likely to give.</li>
+      <li>Answer all questions thoughtfully and honestly.</li>
       <li>Providing your email is optional.</li>
       <li>Once finished, click "Submit" to send your responses.</li>
     </ul>
@@ -85,84 +87,84 @@
   <form id="surveyForm">
     <div id="questions"></div>
     <p>
-      <label for="email">Email (optional):</label><br>
+      <label for="email"><strong>Email</strong> (optional, if you want to be entered into the draw):</label><br>
       <input type="email" id="email" name="email" placeholder="you@example.com">
     </p>
-    <button type="submit">Submit</button>
+    <button type="submit" id="submitBtn">Submit</button>
+  <span id="submitMessage" style="margin-left:10px; color:#555;">Please click only once, it may take a few seconds.</span>
+
+
   </form>
 
   <script>
     // === Step 1: define question variants ===
     const questions = [
       { id: 'Q1', variants: [
-          { text: 'question 1A', variant_id: 'A' },
-          { text: 'question 1B', variant_id: 'B' },
-          { text: 'question 1C', variant_id: 'C' }
+          { text: 'I have the option to take one of two classes this semester. The first class is on a topic that interests me, but the workload is heavy. The other class has a lighter workload and I have some friends taking it, but I’m not as interested in the material. Which class should I take?', variant_id: 'A', options: ['Take the first class', 'Take the second class']},
+          { text: 'I have the option to take one of two classes this semester. The first class is on a topic that interests me, but the workload is heavy. The other class has a lighter workload and I have some friends taking it, but I’m not as interested in the material. The second class might be boring, but I’m worried the first class might be too stressful along with the other courses I’m taking this semester. Which class should I take?', variant_id: 'B', options: ['Take the first class', 'Take the second class']},
+          { text: 'I have the option to take one of two classes this semester. The first class is on a topic that interests me, but the workload is heavy. The other class has a lighter workload and I have some friends taking it, but I’m not as interested in the material. However, I’m worried that the first class might be too stressful along with the other courses I’m taking this semester. Which class should I take?', variant_id: 'C', options: ['Take the first class', 'Take the second class']}
       ]},
       { id: 'Q2', variants: [
-          { text: 'question 2A', variant_id: 'A' },
-          { text: 'question 2B', variant_id: 'B' },
-          { text: 'question 2C', variant_id: 'C' }
+          { text: 'Today I got a summer internship offer that I have to respond to within a week. I’m still in the process of interviewing for a second internship that I would prefer, but they can’t give me a decision in the next week, so I can either take the offer I currently have or reject it and wait to hear from the second company (but potentially get rejected). Should I take the offer I currently have?', variant_id: 'A', options: ['Take the offer', 'Reject the offer']},
+          { text: 'Today I got a summer internship offer that I have to respond to within a week. I’m still in the process of interviewing for a second internship that I would prefer, but they can’t give me a decision in the next week, so I can either take the offer I currently have or reject it and wait to hear from the second company (but potentially get rejected). Taking the offer from the first company is safer, but I also know I would enjoy the work at the second company more. Should I take the offer I currently have?', variant_id: 'B', options: ['Take the offer', 'Reject the offer']},
+          { text: 'Today I got a summer internship offer that I have to respond to within a week. I’m still in the process of interviewing for a second internship that I would prefer, but they can’t give me a decision in the next week, so I can either take the offer I currently have or reject it and wait to hear from the second company (but potentially get rejected). I also know I would enjoy the work at the second company more. Should I take the offer I currently have?', variant_id: 'C', options: ['Take the offer', 'Reject the offer']}
       ]},
       { id: 'Q3', variants: [
-          { text: 'question 3A', variant_id: 'A' },
-          { text: 'question 3B', variant_id: 'B' },
-          { text: 'question 3C', variant_id: 'C' }
+          { text: 'A good friend is having a birthday dinner on the same day I planned to prepare for an exam. Should I go to the dinner or prioritize studying?', variant_id: 'A', options: ['Go to the dinner', 'Study for your exam']},
+          { text: 'A good friend is having a birthday dinner on the same day I planned to prepare for an exam. I’m stressed about the exam, but it’s important to me to be there for my friend. Should I go to the dinner or prioritize studying?', variant_id: 'B', options: ['Go to the dinner', 'Study for your exam']},
+          { text: 'A good friend is having a birthday dinner on the same day I planned to prepare for an exam. It’s important to me to be there for my friend. Should I go to the dinner or prioritize studying?', variant_id: 'C', options: ['Go to the dinner', 'Study for your exam']}
       ]},
       { id: 'Q4', variants: [
-          { text: 'question 4A', variant_id: 'A' },
-          { text: 'question 4B', variant_id: 'B' },
-          { text: 'question 4C', variant_id: 'C' }
+          { text: 'My roommate occasionally throws away food in our common room trash can that makes the room smell bad. Should I confront her about it or just take out the trash myself?', variant_id: 'A', options: ['Confront your roommate', 'Take out the trash yourself']},
+          { text: 'My roommate occasionally throws away food in our common room trash can that makes the room smell bad. It’s not really my job to clean up after her, but I want to maintain a conflict-free relationship with her. Should I confront her about it or just take out the trash myself?', variant_id: 'B', options: ['Confront your roommate', 'Take out the trash yourself']},
+          { text: 'My roommate occasionally throws away food in our common room trash can that makes the room smell bad. I want to maintain a conflict-free relationship with her. Should I confront her about it or just take out the trash myself?', variant_id: 'C', options: ['Confront your roommate', 'Take out the trash yourself']}
       ]},
       { id: 'Q5', variants: [
-          { text: 'question 5A', variant_id: 'A' },
-          { text: 'question 5B', variant_id: 'B' },
-          { text: 'question 5C', variant_id: 'C' }
+          { text: 'Over fall break, my high school friends asked me to get together. However, my family had planned to see a movie together at the same time. What should I do?', variant_id: 'A', options: ['Meet up with friends', 'See movie with family']},
+          { text: 'Over fall break, my high school friends asked me to get together. However, my family had planned to see a movie together at the same time. I don’t want to disappoint my family, but I miss my high school friends. What should I do?', variant_id: 'B', options: ['Meet up with friends', 'See movie with family']},
+          { text: 'Over fall break, my high school friends asked me to get together. However, my family had planned to see a movie together at the same time. I miss my high school friends. What should I do?', variant_id: 'C', options: ['Meet up with friends', 'See movie with family']}
       ]},
       { id: 'Q6', variants: [
-          { text: 'question 6A', variant_id: 'A' },
-          { text: 'question 6B', variant_id: 'B' },
-          { text: 'question 6C', variant_id: 'C' }
+          { text: 'A friend is upset with me but won’t tell me why, and just gives me vague answers whenever I bring it up. Should I push for a conversation or give them space?', variant_id: 'A', options: ['Push for a conversation', 'Give them space']},
+          { text: 'A friend is upset with me but won’t tell me why, and just gives me vague answers whenever I bring it up. I want to understand what’s wrong, but fear that I’m being too pushy. Should I push for a conversation or give them space?', variant_id: 'B', options: ['Push for a conversation', 'Give them space']},
+          { text: 'A friend is upset with me but won’t tell me why, and just gives me vague answers whenever I bring it up. I fear that I’m being too pushy. Should I push for a conversation or give them space?', variant_id: 'C', options: ['Push for a conversation', 'Give them space']}
       ]},
-      { id: 'Q7', variants: [
-          { text: 'question 7A', variant_id: 'A' },
-          { text: 'question 7B', variant_id: 'B' },
-          { text: 'question 7C', variant_id: 'C' }
-      ]},
-      { id: 'Q8', variants: [
-          { text: 'question 8A', variant_id: 'A' },
-          { text: 'question 8B', variant_id: 'B' },
-          { text: 'question 8C', variant_id: 'C' }
-      ]},
-      { id: 'Q9', variants: [
-          { text: 'question 9A', variant_id: 'A' },
-          { text: 'question 9B', variant_id: 'B' },
-          { text: 'question 9C', variant_id: 'C' }
-      ]},
-      { id: 'Q10', variants: [
-          { text: 'question 10A', variant_id: 'A' },
-          { text: 'question 10B', variant_id: 'B' },
-          { text: 'question 10C', variant_id: 'C' }
-      ]}
     ];
 
     // === Step 2: randomize variant selection ===
+    /*
     const chosen = questions.map(q => {
       const choice = q.variants[Math.floor(Math.random() * q.variants.length)];
-      return { id: q.id, text: choice.text, variant: choice.variant_id };
+      return { id: q.id, text: choice.text, variant: choice.variant_id, options: choice.options };
     });
+    */
+   // === Step 2: randomize variant selection (with localStorage) ===
+  let chosen = JSON.parse(localStorage.getItem('surveyChosen')); // check if saved
+
+  if (!chosen) {
+    // Pick random variants for first-time visitor
+    chosen = questions.map(q => {
+      const choice = q.variants[Math.floor(Math.random() * q.variants.length)];
+      return { id: q.id, text: choice.text, variant: choice.variant_id, options: choice.options };
+    });
+    // Save to localStorage so the same user sees same variants on reload
+    localStorage.setItem('surveyChosen', JSON.stringify(chosen));
+  }
 
     // === Step 3: render the questions ===
     const div = document.getElementById('questions');
     chosen.forEach(q => {
-    div.innerHTML += `
-      <div class="question">
-        <p><b>${q.text}</b></p>
-        <label><input type="radio" name="${q.id}" value="Yes" required> Yes</label>
-        <label><input type="radio" name="${q.id}" value="No" required> No</label>
-      </div>
-    `;
-  });
+  let optionsHtml = q.options.map(opt => `
+    <label><input type="radio" name="${q.id}" value="${opt}" required> ${opt}</label>
+  `).join('');
+  
+  div.innerHTML += `
+    <div class="question">
+      <p><b>${q.text}</b></p>
+      ${optionsHtml}
+    </div>
+  `;
+});
 
     // === Step 4: handle submission ===
     document.getElementById('surveyForm').addEventListener('submit', e => {
@@ -183,19 +185,11 @@
         Q5_response: formData.get('Q5'),
         Q6_variant: chosen[5].variant,
         Q6_response: formData.get('Q6'),
-        Q7_variant: chosen[6].variant,
-        Q7_response: formData.get('Q7'),
-        Q8_variant: chosen[7].variant,
-        Q8_response: formData.get('Q8'),
-        Q9_variant: chosen[8].variant,
-        Q9_response: formData.get('Q9'),
-        Q10_variant: chosen[9].variant,
-        Q10_response: formData.get('Q10'),
         email: formData.get('email') || null
       };
 
       // === Step 5: send to Google Apps Script ===
-      fetch('https://script.google.com/macros/s/AKfycbxiX3PwRWz3kHECCecAPMDwWVem8JyIrjcmXzDgytRccyMvFB7ho01qJrU4qGXhcPnjRw/exec', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }) .then(() => { alert('Thank you so much! Your responses were submitted.'); e.target.reset(); }) .catch(err => alert('Error submitting survey: ' + err));
+      fetch('https://script.google.com/macros/s/AKfycbypbzKFCMxy8kJrqQ_q64gPf-JoeI69djarsf96bxX0meV0GZUFnghDHWkiWH6BfGaOZA/exec', { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }) .then(() => { alert('Thank you so much! Your responses were submitted.'); e.target.reset(); }) .catch(err => alert('Error submitting survey: ' + err));
 });
   </script>
 </body>
